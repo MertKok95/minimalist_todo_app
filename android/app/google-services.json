@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "380370204581",
+    "project_id": "planner-192ee",
+    "storage_bucket": "planner-192ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380370204581:android:f2248125580f70a0ab5a4c",
+        "android_client_info": {
+          "package_name": "com.example.todo_list_with_getx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoW1e3UdHuGUvRbQy6IuaFBk4jz2spX98"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
