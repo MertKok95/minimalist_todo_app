@@ -1,14 +1,9 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:todo_list_with_getx/constants/string_constants.dart';
-import 'package:todo_list_with_getx/model/todo_model.dart';
 import 'package:todo_list_with_getx/widgets/main/row_item.dart';
-
 import '../controller/todo_controller.dart';
 import '../widgets/main/bottom_sheet.dart';
 
@@ -57,7 +52,7 @@ class MainScreen extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              Container(
+              SizedBox(
                   height: 500,
                   child: StreamBuilder(
                     stream: todoController.getUserTodoList(),

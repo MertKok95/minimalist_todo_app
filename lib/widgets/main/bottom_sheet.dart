@@ -1,20 +1,12 @@
-// ignore_for_file: must_be_immutable
-
-import 'dart:io';
-
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_awesome_select/flutter_awesome_select.dart';
 import 'package:get/get.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 import 'package:todo_list_with_getx/controller/todo_controller.dart';
-import 'package:todo_list_with_getx/viewmodel/user_save_todo_viewmodel.dart';
 import 'package:todo_list_with_getx/widgets/common/file_attachment.dart';
-
-import '../../model/tag_model.dart';
 
 class BottomSheetWidget extends StatelessWidget {
   final todoController = Get.find<TodoController>();
@@ -170,11 +162,10 @@ class BottomSheetWidget extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Görev ekleme işlemleri burada yapılabilir
                     Navigator.of(context).pop();
                   },
                   child: TextButton(
-                    child: Text('Ekle'),
+                    child: const Text('Ekle'),
                     onPressed: () {
                       todoController.saveUserTodo();
                     },

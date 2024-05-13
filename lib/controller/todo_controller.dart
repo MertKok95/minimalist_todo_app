@@ -153,8 +153,7 @@ class TodoController extends GetxController {
 
   setTodoList(List<QueryDocumentSnapshot<Map<String, dynamic>>> data) {
     for (var element in data) {
-      var dt = element.data();
-      todoList.value.add(TodoModel().fromJson(dt));
+      todoList.value.add(TodoModel().fromJson(element.data()));
     }
     todoList.refresh();
   }

@@ -1,13 +1,10 @@
-// ignore_for_file: prefer_const_constructors_in_immutables
-
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo_list_with_getx/widgets/common/file_attachment.dart';
 
 import '../../controller/todo_controller.dart';
 
+// ignore: must_be_immutable
 class CustomRowItem extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -18,6 +15,7 @@ class CustomRowItem extends StatelessWidget {
   final Function()? onAttachmentPressed;
   final todoController = Get.find<TodoController>();
 
+  // ignore: use_key_in_widget_constructors
   CustomRowItem({
     required this.title,
     required this.subtitle,

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo_list_with_getx/controller/todo_controller.dart';
@@ -7,6 +5,7 @@ import 'package:todo_list_with_getx/controller/todo_controller.dart';
 class FileAttachmentWidget extends StatelessWidget {
   final Function()? onAttachmentPressed;
 
+  // ignore: prefer_const_constructors_in_immutables
   FileAttachmentWidget({super.key, this.onAttachmentPressed});
 
   @override
