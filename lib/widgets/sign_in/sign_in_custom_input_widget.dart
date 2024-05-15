@@ -9,6 +9,7 @@ class SignInCustomInputWidget extends StatelessWidget {
   late double top;
   late double width;
   late IconData icon;
+  late bool obscureText;
 
   SignInCustomInputWidget(
       {super.key,
@@ -17,7 +18,8 @@ class SignInCustomInputWidget extends StatelessWidget {
       this.hintText = "",
       required this.top,
       required this.width,
-      required this.icon});
+      required this.icon,
+      this.obscureText = false});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class SignInCustomInputWidget extends StatelessWidget {
         child: TextFormField(
           controller: controller,
           validator: (value) => (value ?? '').length > 6 ? null : '6 ten kucuk',
+          obscureText: obscureText,
           decoration: InputDecoration(
             hintText: hintText,
             suffixIcon: Icon(icon),

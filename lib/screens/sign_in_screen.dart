@@ -56,6 +56,7 @@ class SignInScreen extends StatelessWidget {
                   SignInCustomInputWidget(
                     context: context,
                     controller: _passwordController,
+                    obscureText: true,
                     hintText: StringConstants.signInUserPasswordHintText,
                     top: 290,
                     width: MediaQuery.of(context).size.width - 50,

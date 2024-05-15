@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:todo_list_with_getx/constants/string_constants.dart';
 import 'package:todo_list_with_getx/widgets/main/row_item.dart';
+import '../constants/route_constants.dart';
 import '../controller/todo_controller.dart';
-import '../widgets/main/bottom_sheet.dart';
 
 class MainScreen extends StatelessWidget {
   final todoController = Get.put(TodoController());
@@ -14,72 +15,74 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-          statusBarColor: Colors.white,
-          statusBarIconBrightness: Brightness.dark),
-    );
-
     return Scaffold(
       backgroundColor: Colors.grey[100],
+      appBar: _appBar(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) {
-                return BottomSheetWidget();
-              });
+          todoController.allClear();
+          Get.toNamed(RouteConstants.createTodoScreen);
         },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
             side: const BorderSide(color: Colors.black)),
         backgroundColor: Colors.white,
-        child: const Icon(Icons.add), //<-- SEE HERE
+        child: const Icon(Icons.add),
       ),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              const Text(
-                StringConstants.mainTodoList,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+      body: Container(
+        padding: const EdgeInsets.all(10),
+        height: MediaQuery.of(context).size.height,
+        child: StreamBuilder(
+          stream: todoController.getUserTodoList(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container();
+            }
+            List<QueryDocumentSnapshot<Map<String, dynamic>>> items =
+                snapshot.data!.docs;
+            todoController.setTodoList(items);
+
+            items.sort((a, b) {
+              return b["priority"]["Key"].compareTo(a["priority"]["Key"]);
+            });
+
+            return GroupedListView<dynamic, String>(
+              elements: items,
+              reverse: true,
+              groupBy: (item) => (item['dueDate'] as String).substring(0, 10),
+              groupSeparatorBuilder: (String groupByValue) =>
+                  Text(groupByValue),
+              itemBuilder: (context, dynamic element) => Container(
+                margin: const EdgeInsets.all(15),
+                child: CustomRowItem(
+                  title: element["title"] ?? "",
+                  subtitle: element["category"]["Value"] ?? "",
+                  date: element["dueDate"] ?? "",
+                  index: 0,
+                ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                  height: 500,
-                  child: StreamBuilder(
-                    stream: todoController.getUserTodoList(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        List<QueryDocumentSnapshot<Map<String, dynamic>>>
-                            items = snapshot.data!.docs;
-                        todoController.setTodoList(items);
-                        return ListView.builder(
-                          itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            return CustomRowItem(
-                              title: items[index]["title"] ?? "",
-                              subtitle: items[index]["category"]["Value"] ?? "",
-                              date: items[index]["dueDate"] ?? "",
-                              index: index,
-                            );
-                          },
-                        );
-                      }
-                      return Container();
-                    },
-                  )),
-            ],
-          ),
+              floatingHeader: true,
+              order: GroupedListOrder.DESC,
+            );
+          },
         ),
       ),
+    );
+  }
+
+  AppBar _appBar() {
+    return AppBar(
+      centerTitle: true,
+      title: const Text(
+        StringConstants.mainPageTitle,
+        style: TextStyle(
+            color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      foregroundColor: Colors.black,
+      backgroundColor: Colors.white,
+      systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.white,
+          statusBarIconBrightness: Brightness.dark),
     );
   }
 }

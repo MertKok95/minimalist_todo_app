@@ -49,6 +49,8 @@ dependencies:
   animated_custom_dropdown: ^3.0.0
   flutter_awesome_select: ^6.5.0
   time_picker_spinner_pop_up: ^2.0.0
+  toastification: ^2.0.0
+  grouped_list: ^5.1.2
 
 dev_dependencies:
   flutter_test:

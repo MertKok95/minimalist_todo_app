@@ -1,27 +1,17 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_awesome_select/flutter_awesome_select.dart';
 import 'package:get/get.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 import 'package:todo_list_with_getx/controller/todo_controller.dart';
-import 'package:todo_list_with_getx/widgets/common/file_attachment.dart';
+
+import '../common/attach_button.dart';
 
 class BottomSheetWidget extends StatelessWidget {
   final todoController = Get.find<TodoController>();
 
   BottomSheetWidget({super.key});
-
-  pickFiles() async {
-    var result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.custom,
-        allowedExtensions: ['pdf', 'xls', 'xlsx', 'doc', 'docx']);
-    if (result != null) {
-      todoController.addAttachmentToTask(result.files);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,71 +40,27 @@ class BottomSheetWidget extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () {
+                      todoController.cancelTodoDetails();
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancel'),
+                    child: Text('İptal Et'),
                   ),
-                  FileAttachmentWidget(
-                    onAttachmentPressed: pickFiles,
-                  )
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Ekle'),
+                  ),
+                  // FileAttachmentWidget(
+                  //   onAttachmentPressed: pickFiles,
+                  // )
                 ],
               ),
               const SizedBox(height: 16),
-              const Text('Görev Ekle', style: TextStyle(fontSize: 18)),
-              const SizedBox(height: 8),
-              TextField(
-                onChanged: (value) {
-                  todoController.title.value = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Başlık',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text('Priority', style: TextStyle(fontSize: 18)),
-              const SizedBox(height: 8),
-              Container(
-                // width: MediaQuery.of(context).size.width * 0.8,
-                margin: EdgeInsets.only(bottom: 10),
-                child: Obx(
-                  () => Wrap(
-                    direction: Axis.horizontal,
-                    children: List.generate(
-                        todoController.priorityList.value.length, (int index) {
-                      return ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              todoController.priorityColor.value[index],
-                        ),
-                        onPressed: () => todoController.setPriorty(index),
-                        child: Text(
-                            todoController.priorityList.value[index].value!),
-                      );
-                    }),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                onChanged: (value) {
-                  todoController.note.value = value;
-                },
-                maxLines: 3,
-                decoration: InputDecoration(
-                  hintText: 'Görev İçeriği',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text('Category', style: TextStyle(fontSize: 18)),
+              const Text('Kategori', style: TextStyle(fontSize: 18)),
               const SizedBox(height: 8),
               CustomDropdown<String>(
-                hintText: 'Select Category',
+                hintText: 'Kategori Seç',
                 items: todoController.categoryList.value
                     .map((data) => data.value!)
                     .toList(),
@@ -124,13 +70,16 @@ class BottomSheetWidget extends StatelessWidget {
                 onChanged: (value) => todoController.setCategory(value),
               ),
               const SizedBox(height: 10),
+              AttachButton(onPressed: () {}),
+
+              const SizedBox(height: 16),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Bitiş Tarihi Seç',
-                      style: TextStyle(fontSize: 18)),
+                  const Text('Teslim Tarihi', style: TextStyle(fontSize: 18)),
                   TimePickerSpinnerPopUp(
-                    mode: CupertinoDatePickerMode.date,
+                    mode: CupertinoDatePickerMode.dateAndTime,
                     initTime: DateTime.now(),
                     minTime: DateTime.now().subtract(const Duration(days: 10)),
                     maxTime: DateTime.now().add(const Duration(days: 180)),
@@ -138,8 +87,8 @@ class BottomSheetWidget extends StatelessWidget {
                         Colors.black12, //Barrier Color when pop up show
                     minuteInterval: 1,
                     padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-                    cancelText: 'Cancel',
-                    confirmText: 'OK',
+                    cancelText: 'İptal Et',
+                    confirmText: 'Onayla',
                     pressType: PressType.singlePress,
                     timeFormat: 'dd/MM/yyyy',
                     onChange: (dateTime) {
@@ -148,30 +97,36 @@ class BottomSheetWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
+              const Divider(
+                color: Colors.black,
+                height: 20,
+                thickness: 2,
+              ),
               SmartSelect<int>.multiple(
-                title: 'Tags',
+                title: 'Etiket Seç',
+                placeholder: 'Etiketler',
                 selectedChoice: todoController.tagList.value
                     .map((e) => S2Choice<int>(value: e.key!, title: e.value))
                     .toList(),
                 choiceItems: todoController.tagOptions.value,
                 onChange: (state) => todoController.setTags(state.choice),
               ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: TextButton(
-                    child: const Text('Ekle'),
-                    onPressed: () {
-                      todoController.saveUserTodo();
-                    },
-                  ),
-                ),
-              ),
+
+              // Align(
+              //   alignment: Alignment.centerRight,
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       Navigator.of(context).pop();
+              //     },
+              //     child: TextButton(
+              //       child: const Text('Ekle'),
+              //       onPressed: () {
+              //         todoController.saveUserTodo();
+              //       },
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

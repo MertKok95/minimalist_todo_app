@@ -12,16 +12,16 @@ class CategoryModel extends IBaseModel<CategoryModel> {
   @override
   CategoryModel fromJson(Map<String, dynamic> json) {
     return CategoryModel(
-      key: json["Key"],
-      value: json["Value"],
+      key: json["Key"] ?? 0,
+      value: json["Value"] ?? "",
     );
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      "Key": key,
-      "Value": value,
+      "Key": key ?? 0,
+      "Value": value ?? "",
     };
   }
 }

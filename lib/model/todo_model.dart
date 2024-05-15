@@ -39,12 +39,14 @@ class TodoModel extends IBaseModel<TodoModel> {
       note: json['note'],
       priority: PriorityModel().fromJson(json["priority"]),
       isCompleted: json["isCompleted"],
-      dueDate: json["date"],
+      dueDate: json["dueDate"],
       // dueDate: json['dueDate'] != null
       //     ? DateTime.parse(json['dueDate'])
       //     : DateTime.now().add(
       //         const Duration(days: 30)), // if no deadline, default value is 30
-      category: CategoryModel().fromJson(json["category"]),
+      category: json["category"] != null
+          ? CategoryModel().fromJson(json["category"])
+          : CategoryModel(),
       tags: json["tags"] == null
           ? []
           : List<TagModel>.from(
@@ -63,7 +65,8 @@ class TodoModel extends IBaseModel<TodoModel> {
       'isCompleted': isCompleted,
       'dueDate': dueDate,
       // 'dueDate': dueDate!.toIso8601String(),
-      'category': category!.toJson(),
+      'category':
+          category != null ? category!.toJson() : CategoryModel().toJson(),
       "tags": List<Map<String, dynamic>>.from(tags!.map((x) => x.toJson())),
       "attachments": attachments != null
           ? List<String>.from(attachments!.map((file) => file))

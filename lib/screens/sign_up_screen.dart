@@ -52,7 +52,7 @@ class SignUpScreen extends StatelessWidget {
                     controller: _nameController,
                     validator: (value) => (value ?? '').length > 1
                         ? null
-                        : 'minimum 2 karakterli olmalı',
+                        : StringConstants.registerMinNameLength,
                     decoration: InputDecoration(
                       hintText: StringConstants.registerNameHint,
                       prefixIcon: const Icon(Icons.person),
@@ -73,7 +73,7 @@ class SignUpScreen extends StatelessWidget {
                     controller: _surnameController,
                     validator: (value) => (value ?? '').length > 1
                         ? null
-                        : 'minimum 2 karakterli olmalı',
+                        : StringConstants.registerMinSurNameLength,
                     decoration: InputDecoration(
                       hintText: StringConstants.registerSurnameHint,
                       prefixIcon: const Icon(Icons.person),
@@ -94,7 +94,7 @@ class SignUpScreen extends StatelessWidget {
                     controller: _emailController,
                     validator: (value) => (value ?? '').length > 4
                         ? null
-                        : 'minimum 5 karakterli olmalı',
+                        : StringConstants.registerMinMailLength,
                     decoration: InputDecoration(
                       hintText: StringConstants.registerMailAddressHint,
                       prefixIcon: const Icon(Icons.mail),
@@ -116,7 +116,7 @@ class SignUpScreen extends StatelessWidget {
                     obscureText: true,
                     validator: (value) => (value ?? '').length > 5
                         ? null
-                        : 'minimum 6 karakterli olmalı',
+                        : StringConstants.registerPasswordLength,
                     decoration: InputDecoration(
                       hintText: StringConstants.registerPasswordHint,
                       prefixIcon: const Icon(Icons.key),
@@ -138,7 +138,7 @@ class SignUpScreen extends StatelessWidget {
                     obscureText: true,
                     validator: (value) => (value ?? '').length > 5
                         ? null
-                        : 'minimum 6 karakterli olmalı',
+                        : StringConstants.registerPasswordLength,
                     decoration: InputDecoration(
                       hintText: StringConstants.registerPasswordAgainHint,
                       prefixIcon: const Icon(Icons.key),

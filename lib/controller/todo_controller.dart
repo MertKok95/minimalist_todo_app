@@ -33,6 +33,8 @@ class TodoController extends GetxController {
   Rx<List<TagModel>> tagList = Rx<List<TagModel>>([]);
   Rx<List<S2Choice<int>>> tagOptions = Rx<List<S2Choice<int>>>([]);
 
+  List<String> errorMessages = [];
+
   var defaultPriorityColor = const Color.fromARGB(255, 250, 245, 251);
   var selectedPriorityColor = const Color.fromARGB(255, 176, 233, 246);
 
@@ -55,10 +57,11 @@ class TodoController extends GetxController {
   loadCategoryList() async {
     var collection =
         await FirebaseFirestore.instance.collection("Category").get();
+    categoryList.value.add(CategoryModel(key: 0, value: "Seç"));
     for (var element in collection.docs) {
       categoryList.value.add(CategoryModel().fromJson(element.data()));
     }
-    category.value = categoryList.value[0];
+    // category.value = categoryList.value[0]; if you want as default value
   }
 
   loadTags() async {
@@ -68,6 +71,25 @@ class TodoController extends GetxController {
       tagOptions.value
           .add(S2Choice<int>(value: data["Key"], title: data["Value"]));
     }
+  }
+
+  allClear() {
+    title.value = "";
+    note.value = "";
+    priority.value = null;
+    cancelTodoDetails();
+    priorityColor.value =
+        priorityColor.value.map((p) => defaultPriorityColor).toList();
+    priorityColor.refresh();
+  }
+
+  cancelTodoDetails() {
+    category.value = null;
+    date.value = "";
+    tagList.value.clear();
+    pickedFiles.value.clear();
+    pickedFiles.refresh();
+    tagList.refresh();
   }
 
   setPriorty(int index) {
@@ -116,20 +138,30 @@ class TodoController extends GetxController {
       pickedFiles.value.add(item);
     }
     hasAttachment.value = true;
+    pickedFiles.refresh();
   }
 
-  Future saveUserTodo() async {
+  Future<String> saveUserTodo() async {
     var user =
         CacheManager.getInstance.getCacheItem<UserModel>("UserId", UserModel());
-    if (user != null && isEmptyOrNull()) {
+    errorMessages.clear();
+    if (user == null) {
+      errorMessages.add("Kullanıcı bilgisi bulunamadı");
+    }
+
+    isEmptyOrNull();
+
+    if (errorMessages.isEmpty) {
       var todoModel = TodoModel(
-          uid: user.uid,
+          uid: user!.uid,
           key: getRandomString(15),
           title: title.value,
           note: note.value,
           priority: priority.value,
-          category: CategoryModel(
-              key: category.value!.key!, value: category.value!.value!),
+          category: category.value != null
+              ? CategoryModel(
+                  key: category.value!.key!, value: category.value!.value!)
+              : CategoryModel(),
           tags: tagList.value,
           dueDate: date.value);
 
@@ -149,6 +181,13 @@ class TodoController extends GetxController {
           .doc(todoModel.key)
           .set(todoModel.toJson());
     }
+
+    String response = "";
+
+    for (var message in errorMessages) {
+      response += message + "\n";
+    }
+    return response;
   }
 
   setTodoList(List<QueryDocumentSnapshot<Map<String, dynamic>>> data) {
@@ -190,27 +229,23 @@ class TodoController extends GetxController {
     await reference.putFile(file);
   }
 
-  bool isEmptyOrNull() {
-    bool status = true;
+  isEmptyOrNull() {
     if (title.value == null || title.value == "") {
-      status = false;
+      errorMessages.add("Başlık giriniz");
     }
     if (note.value == null || note.value == "") {
-      status = false;
+      errorMessages.add("İçerik ekleyiniz");
     }
 
     if (date.value == "") {
-      status = false;
-    }
-
-    // ignore: unrelated_type_equality_checks
-    if (category.value == null || category.value == "") {
-      status = false;
+      date.value = DateTime.now().toIso8601String();
     }
 
     if (priority.value == null) {
-      status = false;
+      errorMessages.add("Öncelik belirlenmeli");
+    } else if (priority.value != null &&
+        (priority.value!.value == null || priority.value!.value == "")) {
+      errorMessages.add("Öncelik belirlenmeli");
     }
-    return status;
   }
 }
