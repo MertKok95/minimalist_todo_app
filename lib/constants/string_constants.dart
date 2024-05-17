@@ -20,7 +20,7 @@ class StringConstants {
   static const String registerMinNameLength = "minimum 2 karakterli olmalı";
   static const String registerMinSurNameLength = "minimum 2 karakterli olmalı";
   static const String registerMinMailLength = "minimum 5 karakterli olmalı";
-  static const String registerPasswordLength = "minimum 6 karakterli olmalı";
+  static const String registerMinPasswordLength = "minimum 6 karakterli olmalı";
 
   // Main
   static const String mainPageTitle = "Todo List";
@@ -33,4 +33,5 @@ class StringConstants {
 
   // Create User To do
   static const String todoPageTitle = "Yeni Görev";
+  static const String todoDetail = "Detay";
 }

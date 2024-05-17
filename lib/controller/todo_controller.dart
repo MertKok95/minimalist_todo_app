@@ -10,8 +10,11 @@ import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:todo_list_with_getx/constants/string_constants.dart';
 import 'package:todo_list_with_getx/model/tag_model.dart';
+import 'package:todo_list_with_getx/services/firebase/abstract/abstract_todo_service.dart';
 
 import '../app/cache/cache_manager.dart';
+import '../app/helper/notification_helper.dart';
+import '../app/locator/get_it_locator.dart';
 import '../model/category_model.dart';
 import '../model/priority_model.dart';
 import '../model/todo_model.dart';
@@ -33,10 +36,14 @@ class TodoController extends GetxController {
   Rx<List<TagModel>> tagList = Rx<List<TagModel>>([]);
   Rx<List<S2Choice<int>>> tagOptions = Rx<List<S2Choice<int>>>([]);
 
+  Rx<bool> isEnableTodo = true.obs;
+
   List<String> errorMessages = [];
 
   var defaultPriorityColor = const Color.fromARGB(255, 250, 245, 251);
   var selectedPriorityColor = const Color.fromARGB(255, 176, 233, 246);
+
+  final ITodoService _todoService = locator<ITodoService>();
 
   TodoController() {
     getUserTodoList();
@@ -142,6 +149,7 @@ class TodoController extends GetxController {
   }
 
   Future<String> saveUserTodo() async {
+    isEnableTodo.value = false;
     var user =
         CacheManager.getInstance.getCacheItem<UserModel>("UserId", UserModel());
     errorMessages.clear();
@@ -180,6 +188,8 @@ class TodoController extends GetxController {
           .collection("UserTodo")
           .doc(todoModel.key)
           .set(todoModel.toJson());
+
+      addLocalNotification();
     }
 
     String response = "";
@@ -187,7 +197,23 @@ class TodoController extends GetxController {
     for (var message in errorMessages) {
       response += message + "\n";
     }
+    isEnableTodo.value = true;
     return response;
+  }
+
+  addLocalNotification() {
+    var differences = DateTime.parse(date.value).difference(DateTime.now());
+    int diffDay = differences.inDays;
+    int dayMinute = differences.inMinutes.remainder(60);
+
+    if (diffDay > 1 || (diffDay == 1 && dayMinute > 5)) {
+      NotificationHelper.showScheduleNotification(
+          id: todoList.value.length + 1,
+          title: title.value!,
+          body: note.value!,
+          payload: note.value!,
+          dateTime: DateTime.parse(date.value));
+    }
   }
 
   setTodoList(List<QueryDocumentSnapshot<Map<String, dynamic>>> data) {

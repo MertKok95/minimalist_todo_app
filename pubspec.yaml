@@ -51,6 +51,9 @@ dependencies:
   time_picker_spinner_pop_up: ^2.0.0
   toastification: ^2.0.0
   grouped_list: ^5.1.2
+  flutter_local_notifications: ^17.1.2
+  timezone: ^0.9.3
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:

@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:todo_list_with_getx/constants/string_constants.dart';
 import 'package:todo_list_with_getx/widgets/main/row_item.dart';
 import '../constants/route_constants.dart';
 import '../controller/todo_controller.dart';
+import '../widgets/common/appbar.dart';
 
 class MainScreen extends StatelessWidget {
   final todoController = Get.put(TodoController());
@@ -17,7 +17,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: _appBar(),
+      appBar: AppBarWidget(title: StringConstants.mainPageTitle),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           todoController.allClear();
@@ -67,22 +67,6 @@ class MainScreen extends StatelessWidget {
           },
         ),
       ),
-    );
-  }
-
-  AppBar _appBar() {
-    return AppBar(
-      centerTitle: true,
-      title: const Text(
-        StringConstants.mainPageTitle,
-        style: TextStyle(
-            color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-      foregroundColor: Colors.black,
-      backgroundColor: Colors.white,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.white,
-          statusBarIconBrightness: Brightness.dark),
     );
   }
 }
