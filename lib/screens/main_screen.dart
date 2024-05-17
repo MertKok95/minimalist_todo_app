@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
-import 'package:todo_list_with_getx/constants/string_constants.dart';
-import 'package:todo_list_with_getx/widgets/main/row_item.dart';
 import '../constants/route_constants.dart';
+import '../constants/string_constants.dart';
 import '../controller/todo_controller.dart';
 import '../widgets/common/appbar.dart';
+import '../widgets/main/row_item.dart';
 
 class MainScreen extends StatelessWidget {
   final todoController = Get.put(TodoController());
@@ -91,9 +91,8 @@ class MainScreen extends StatelessWidget {
                 subtitle: (element["note"] as String).length > 20
                     ? (element["note"] as String).substring(0, 20)
                     : element["note"],
-                date: element["dueDate"] ?? "",
-                index: items.indexOf(
-                    items.where((x) => x["key"] == element["key"]).first),
+                date: todoController.getDate(element["dueDate"] ?? ""),
+                itemKey: element["key"] ?? "",
               ),
             ),
             floatingHeader: true,

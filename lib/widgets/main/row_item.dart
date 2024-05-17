@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_list_with_getx/widgets/common/file_attachment.dart';
 
 import '../../controller/todo_controller.dart';
+import '../common/file_attachment.dart';
 
 // ignore: must_be_immutable
 class CustomRowItem extends StatelessWidget {
@@ -10,7 +10,7 @@ class CustomRowItem extends StatelessWidget {
   final String subtitle;
   final String date;
   bool isConfirmed;
-  final int index;
+  final String itemKey;
   final Function()? onAttachmentPressed;
   final todoController = Get.find<TodoController>();
 
@@ -19,7 +19,7 @@ class CustomRowItem extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.date,
-    required this.index,
+    required this.itemKey,
     this.isConfirmed = false,
     this.onAttachmentPressed,
   });
@@ -34,12 +34,12 @@ class CustomRowItem extends StatelessWidget {
         children: [
           Obx(
             () => Checkbox(
-                value: todoController.selectedItems.value.any((element) =>
-                        element == todoController.todoList.value[index].key)
+                value: todoController.selectedItems.value
+                        .any((key) => key == itemKey)
                     ? true
                     : false,
                 onChanged: (value) {
-                  todoController.selectTodoItem(index, value);
+                  todoController.selectTodoItem(itemKey, value);
                 }),
           ),
           Expanded(
@@ -73,7 +73,7 @@ class CustomRowItem extends StatelessWidget {
             ),
           ),
           FileAttachmentWidget(
-              index: index, onAttachmentPressed: onAttachmentPressed)
+              itemKey: itemKey, onAttachmentPressed: onAttachmentPressed)
         ],
       ),
     );

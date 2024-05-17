@@ -9,18 +9,15 @@ class UserService extends IUserService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  Future<bool> createUserWithEmailAndPassword(UserModel model) async {
+  Future<UserModel?> createUserWithEmailAndPassword(UserModel model) async {
     try {
-      FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: model.email!, password: model.password!)
-          .then((response) async {
-        model.uid = response.user!.uid;
-        await saveUserToFirestore(model);
-      });
-      return true;
+      var response = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: model.email!, password: model.password!);
+      model.uid = response.user!.uid;
+      await saveUserToFirestore(model);
+      return model;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 

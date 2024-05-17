@@ -1,4 +1,4 @@
-import 'package:todo_list_with_getx/model/base_model.dart';
+import 'base_model.dart';
 
 class Status extends IBaseModel<Status> {
   String? key;

@@ -127,19 +127,13 @@ class TodoController extends GetxController {
     }
   }
 
-  selectTodoItem(index, value) {
-    todoList.value[index].isCompleted = value;
-
-    var listItemIndex = selectedItems.value.indexOf(todoList.value[index].key!);
-
-    if (listItemIndex == -1) {
-      selectedItems.value.add(todoList.value[index].key!);
+  selectTodoItem(itemKey, value) {
+    if (selectedItems.value.any((key) => key == itemKey)) {
+      selectedItems.value.remove(itemKey);
     } else {
-      selectedItems.value.removeAt(listItemIndex);
+      selectedItems.value.add(itemKey);
     }
-
     selectedItems.refresh();
-    todoList.refresh();
   }
 
   removeTodoItem() async {
@@ -273,5 +267,9 @@ class TodoController extends GetxController {
         (priority.value!.value == null || priority.value!.value == "")) {
       errorMessages.add("Öncelik belirlenmeli");
     }
+  }
+
+  getDate(date) {
+    return HelperMethods().getCustomDate(date);
   }
 }

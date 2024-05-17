@@ -34,4 +34,11 @@ class StringConstants {
   // Create User To do
   static const String todoPageTitle = "Yeni Görev";
   static const String todoDetail = "Detay";
+
+  // messages
+  static const String loginInfoMessageTitle = "Bilgi";
+  static const String loginInfoMessage = "Bilgileri kontrol ediniz.";
+  static const String singUpInfoMessageTitle = "Bilgi";
+  static const String singUpInfoMessage =
+      "Kayıt başarısız, bilgileri kontrol ediniz.";
 }

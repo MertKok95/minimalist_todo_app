@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_awesome_select/flutter_awesome_select.dart';
 import 'package:get/get.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
-import 'package:todo_list_with_getx/controller/todo_controller.dart';
 
+import '../../controller/todo_controller.dart';
 import '../common/attach_button.dart';
 
 class BottomSheetWidget extends StatelessWidget {

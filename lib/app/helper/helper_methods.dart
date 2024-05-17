@@ -14,4 +14,11 @@ class HelperMethods {
       ),
     );
   }
+
+  String getCustomDate(String? date) {
+    if (date != null && date.isNotEmpty) {
+      return date.substring(0, 19).replaceAll("T", " ");
+    }
+    return "";
+  }
 }

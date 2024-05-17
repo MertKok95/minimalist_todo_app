@@ -24,15 +24,17 @@ class NotificationHelper {
     tz.TZDateTime tzDateTime = tz.TZDateTime.from(dateTime, tz.local)
         .add(const Duration(days: -1, minutes: -5));
 
+    // detaylar vepayload kısımı aktif kullanıma geçilmemiştir. Örnektir.
     NotificationDetails notificationDetails = const NotificationDetails(
-        android: AndroidNotificationDetails('channel 3', 'your channel name',
+        android: AndroidNotificationDetails(
+            'custom channel name', 'your channel name',
             channelDescription: 'your channel description',
             importance: Importance.max,
             priority: Priority.high,
             ticker: 'ticker'));
 
     await _notification.zonedSchedule(
-        0, title, body, tzDateTime, notificationDetails,
+        id, title, body, tzDateTime, notificationDetails,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,

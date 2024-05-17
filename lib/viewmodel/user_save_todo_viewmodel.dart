@@ -1,10 +1,5 @@
-// To parse this JSON data, do
-//
-//     final userSaveTodoViewModel = userSaveTodoViewModelFromJson(jsonString);
-
 import 'dart:io';
-
-import 'package:todo_list_with_getx/model/tag_model.dart';
+import '../model/tag_model.dart';
 
 class UserSaveTodoViewModel {
   String title;

@@ -1,10 +1,7 @@
-import 'dart:io';
-
-import 'package:todo_list_with_getx/model/base_model.dart';
-import 'package:todo_list_with_getx/model/category_model.dart';
-import 'package:todo_list_with_getx/model/tag_model.dart';
-
+import 'base_model.dart';
+import 'category_model.dart';
 import 'priority_model.dart';
+import 'tag_model.dart';
 
 class TodoModel extends IBaseModel<TodoModel> {
   String? uid;

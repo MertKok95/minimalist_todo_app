@@ -40,9 +40,13 @@ class UserController extends GetxController {
         userModel!.email = userViewModel.email;
         userModel!.password = userViewModel.password;
 
-        var response =
+        var model =
             await _userService.createUserWithEmailAndPassword(userModel!);
-        return response ? true : false;
+        if (model != null) {
+          await CacheManager.getInstance
+              .addCacheItem<UserModel>("UserId", model);
+        }
+        return model == null ? false : true;
       }
     }
     return false;

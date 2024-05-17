@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_list_with_getx/app/helper/message_helper.dart';
-import 'package:todo_list_with_getx/controller/user_controller.dart';
 
 import '../app/enums/message_enum.dart';
+import '../app/helper/message_helper.dart';
 import '../constants/route_constants.dart';
 import '../constants/string_constants.dart';
+import '../controller/user_controller.dart';
 import '../viewmodel/user_viewmodel.dart';
 import '../widgets/common/appbar.dart';
 
@@ -102,9 +102,10 @@ class SignUpScreen extends StatelessWidget {
                                 name: _nameController.text,
                                 surname: _surnameController.text,
                                 email: _emailController.text,
-                                password: _passwordAgainController.text,
+                                password: _passwordController.text,
                                 rePassword: _passwordAgainController.text));
 
+                        userController.isEnableButton.value = true;
                         if (response) {
                           Get.offNamedUntil(
                               RouteConstants.mainScreen, (route) => false);
@@ -113,12 +114,10 @@ class SignUpScreen extends StatelessWidget {
                                   mainCointext: context,
                                   messageTypes: MessageTypes.info,
                                   messageStyles: MessageStyles.minimal,
-                                  title: 'Bilgi',
-                                  message:
-                                      'Kayıt başarısız, bilgileri kontrol ediniz.')
+                                  title: StringConstants.singUpInfoMessageTitle,
+                                  message: StringConstants.singUpInfoMessage)
                               .ShowMessage();
                         }
-                        userController.isEnableButton.value = true;
                       }
                     }
                   : () {},
