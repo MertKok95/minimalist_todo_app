@@ -12,6 +12,7 @@ import 'app/helper/notification_helper.dart';
 import 'firebase_options.dart';
 import 'screens/create_todo_screen.dart';
 
+// route ayrı bir yönetim sınıfında geliştirilmesi gerekli
 // service tarafı yapılacak - getit kütüphanesi kullanılacak
 // appBar widget olarak tasarlanacak
 // detay eklemeleri için onay buttonları eklenecek.
@@ -26,14 +27,14 @@ import 'screens/create_todo_screen.dart';
 // birden fazla tıklama engellenecek
 // notification detay kısmı halledilecek.
 // todo service yapılacak
+// klavye tipi ayarlanacak
 
-void main() {
-  setInitialize();
-  // locator gelecek
+Future<void> main() async {
+  await setInitialize();
   runApp(TodoListApp());
 }
 
-setInitialize() async {
+Future<void> setInitialize() async {
   WidgetsFlutterBinding.ensureInitialized();
   setUpLocator();
   CacheManager.getInstance;

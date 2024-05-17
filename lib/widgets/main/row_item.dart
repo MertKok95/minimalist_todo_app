@@ -10,7 +10,6 @@ class CustomRowItem extends StatelessWidget {
   final String subtitle;
   final String date;
   bool isConfirmed;
-  final bool hasAttachment;
   final int index;
   final Function()? onAttachmentPressed;
   final todoController = Get.find<TodoController>();
@@ -22,7 +21,6 @@ class CustomRowItem extends StatelessWidget {
     required this.date,
     required this.index,
     this.isConfirmed = false,
-    this.hasAttachment = false,
     this.onAttachmentPressed,
   });
 
@@ -36,7 +34,10 @@ class CustomRowItem extends StatelessWidget {
         children: [
           Obx(
             () => Checkbox(
-                value: todoController.todoList.value[index].isCompleted,
+                value: todoController.selectedItems.value.any((element) =>
+                        element == todoController.todoList.value[index].key)
+                    ? true
+                    : false,
                 onChanged: (value) {
                   todoController.selectTodoItem(index, value);
                 }),
@@ -71,7 +72,8 @@ class CustomRowItem extends StatelessWidget {
               ],
             ),
           ),
-          FileAttachmentWidget(onAttachmentPressed: onAttachmentPressed)
+          FileAttachmentWidget(
+              index: index, onAttachmentPressed: onAttachmentPressed)
         ],
       ),
     );

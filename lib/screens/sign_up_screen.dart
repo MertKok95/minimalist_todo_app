@@ -92,31 +92,36 @@ class SignUpScreen extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                   backgroundColor: Colors.grey.shade100,
                   side: const BorderSide(width: 0, color: Colors.black)),
-              onPressed: () async {
-                if (_formKey.currentState != null &&
-                    _formKey.currentState!.validate()) {
-                  var response = await userController.saveUser(UserViewModel(
-                      name: _nameController.text,
-                      surname: _surnameController.text,
-                      email: _emailController.text,
-                      password: _passwordAgainController.text,
-                      rePassword: _passwordAgainController.text));
+              onPressed: userController.isEnableButton.value
+                  ? () async {
+                      if (_formKey.currentState != null &&
+                          _formKey.currentState!.validate()) {
+                        userController.isEnableButton.value = false;
+                        var response = await userController.saveUser(
+                            UserViewModel(
+                                name: _nameController.text,
+                                surname: _surnameController.text,
+                                email: _emailController.text,
+                                password: _passwordAgainController.text,
+                                rePassword: _passwordAgainController.text));
 
-                  if (response) {
-                    Get.offNamedUntil(
-                        RouteConstants.mainScreen, (route) => false);
-                  } else {
-                    MessageHelper(
-                            mainCointext: context,
-                            messageTypes: MessageTypes.info,
-                            messageStyles: MessageStyles.minimal,
-                            title: 'Bilgi',
-                            message:
-                                'Kayıt başarısız, bilgileri kontrol ediniz.')
-                        .ShowMessage();
-                  }
-                }
-              },
+                        if (response) {
+                          Get.offNamedUntil(
+                              RouteConstants.mainScreen, (route) => false);
+                        } else {
+                          MessageHelper(
+                                  mainCointext: context,
+                                  messageTypes: MessageTypes.info,
+                                  messageStyles: MessageStyles.minimal,
+                                  title: 'Bilgi',
+                                  message:
+                                      'Kayıt başarısız, bilgileri kontrol ediniz.')
+                              .ShowMessage();
+                        }
+                        userController.isEnableButton.value = true;
+                      }
+                    }
+                  : () {},
               child: const Center(
                 child: Text(
                   StringConstants.registerRegisterHint,

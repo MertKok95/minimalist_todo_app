@@ -1,9 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:todo_list_with_getx/app/enums/message_enum.dart';
-import 'package:todo_list_with_getx/app/helper/notification_helper.dart';
 import 'package:todo_list_with_getx/widgets/common/appbar.dart';
 import '../app/enums/file_extension_enum.dart';
 import '../app/helper/message_helper.dart';
@@ -122,11 +120,11 @@ class TodoBody extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Get.back();
               },
               child: TextButton(
                 child: const Text(StringConstants.mainAddTodo),
-                onPressed: () async => todoController.isEnableTodo.value
+                onPressed: () async => todoController.isEnableButton.value
                     ? saveTodo(context)
                     : () {},
               ),
@@ -164,6 +162,9 @@ class TodoBody extends StatelessWidget {
           message: errorMessage);
 
       messageInstance.ShowMessage();
+    } else {
+      todoController.todoList.refresh();
+      Get.back();
     }
   }
 }

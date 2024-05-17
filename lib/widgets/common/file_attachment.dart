@@ -3,10 +3,13 @@ import 'package:get/get.dart';
 import 'package:todo_list_with_getx/controller/todo_controller.dart';
 
 class FileAttachmentWidget extends StatelessWidget {
+  final int index;
+
   final Function()? onAttachmentPressed;
 
   // ignore: prefer_const_constructors_in_immutables
-  FileAttachmentWidget({super.key, this.onAttachmentPressed});
+  FileAttachmentWidget(
+      {super.key, required this.index, this.onAttachmentPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -18,17 +21,26 @@ class FileAttachmentWidget extends StatelessWidget {
             children: [
               Icon(
                 Icons.attach_file,
-                color: todoController.hasAttachment.value
-                    ? Colors.blue
-                    : Colors.grey,
+                color:
+                    todoController.todoList.value[index].attachments != null &&
+                            todoController
+                                .todoList.value[index].attachments!.isNotEmpty
+                        ? Colors.blue
+                        : Colors.grey,
               ),
               const SizedBox(width: 4),
               Text(
-                todoController.hasAttachment.value
-                    ? todoController.pickedFiles.value.length.toString()
+                todoController.todoList.value[index].attachments != null &&
+                        todoController
+                            .todoList.value[index].attachments!.isNotEmpty
+                    ? todoController.todoList.value[index].attachments!.length
+                        .toString()
                     : '',
                 style: TextStyle(
-                  color: todoController.hasAttachment.value
+                  color: todoController.todoList.value[index].attachments !=
+                              null &&
+                          todoController
+                              .todoList.value[index].attachments!.isNotEmpty
                       ? Colors.blue
                       : Colors.grey,
                 ),

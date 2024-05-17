@@ -5,8 +5,9 @@ import 'package:flutter/services.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  List<Widget>? actions;
 
-  AppBarWidget({required this.title});
+  AppBarWidget({required this.title, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +18,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         style: const TextStyle(
             color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
       ),
+      surfaceTintColor: Colors.white,
       foregroundColor: Colors.black,
       backgroundColor: Colors.white,
+      actions: actions,
       systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.white,
           statusBarIconBrightness: Brightness.dark),

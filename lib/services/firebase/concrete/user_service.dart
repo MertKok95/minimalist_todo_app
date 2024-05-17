@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:todo_list_with_getx/services/firebase/abstract/abstract_user_service.dart';
 
 import '../../../model/user_model.dart';
 import '../../../viewmodel/sign_in_viewmodel.dart';
+import '../abstract/abstract_user_service.dart';
 
 class UserService extends IUserService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;

@@ -88,13 +88,18 @@ class SignInScreen extends StatelessWidget {
                           backgroundColor: Colors.grey.shade100,
                           side:
                               const BorderSide(width: 0, color: Colors.black)),
-                      onPressed: () {
-                        if (_formKey.currentState != null &&
-                            _formKey.currentState!.validate()) {
-                          userController.signIn(SignInViewModel(
-                              _emailController.text, _passwordController.text));
-                        }
-                      },
+                      onPressed: userController.isEnableButton.value
+                          ? () {
+                              if (_formKey.currentState != null &&
+                                  _formKey.currentState!.validate()) {
+                                userController.isEnableButton.value = false;
+                                userController.signIn(SignInViewModel(
+                                    _emailController.text,
+                                    _passwordController.text));
+                                userController.isEnableButton.value = true;
+                              }
+                            }
+                          : () {},
                       child: const Center(
                         child: Text(
                           StringConstants.signInButtonText,

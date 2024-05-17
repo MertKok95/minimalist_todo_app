@@ -1,18 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:todo_list_with_getx/app/helper/message_helper.dart';
-import 'package:todo_list_with_getx/constants/route_constants.dart';
-import 'package:todo_list_with_getx/model/user_model.dart';
-import 'package:todo_list_with_getx/services/firebase/abstract/abstract_user_service.dart';
-import 'package:todo_list_with_getx/viewmodel/sign_in_viewmodel.dart';
 
 import '../app/cache/cache_manager.dart';
 import '../app/locator/get_it_locator.dart';
+import '../constants/route_constants.dart';
+import '../model/user_model.dart';
+import '../services/firebase/abstract/abstract_user_service.dart';
+import '../viewmodel/sign_in_viewmodel.dart';
 import '../viewmodel/user_viewmodel.dart';
 
 class UserController extends GetxController {
   final IUserService _userService = locator<IUserService>();
+  Rx<bool> isEnableButton = true.obs;
   UserModel? userModel;
 
   UserController() {

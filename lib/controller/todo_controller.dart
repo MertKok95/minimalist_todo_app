@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -8,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_awesome_select/flutter_awesome_select.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
-import 'package:todo_list_with_getx/constants/string_constants.dart';
+import 'package:todo_list_with_getx/app/helper/helper_methods.dart';
 import 'package:todo_list_with_getx/model/tag_model.dart';
 import 'package:todo_list_with_getx/services/firebase/abstract/abstract_todo_service.dart';
 
@@ -23,6 +22,7 @@ import '../model/user_model.dart';
 class TodoController extends GetxController {
   Rx<List<File>> pickedFiles = Rx<List<File>>([]);
   Rx<List<TodoModel>> todoList = Rx<List<TodoModel>>([]);
+  Rx<List<String>> selectedItems = Rx<List<String>>([]);
   Rx<List<PriorityModel>> priorityList = Rx<List<PriorityModel>>([]);
   Rx<List<CategoryModel>> categoryList = Rx<List<CategoryModel>>([]);
   var hasAttachment = false.obs;
@@ -36,7 +36,7 @@ class TodoController extends GetxController {
   Rx<List<TagModel>> tagList = Rx<List<TagModel>>([]);
   Rx<List<S2Choice<int>>> tagOptions = Rx<List<S2Choice<int>>>([]);
 
-  Rx<bool> isEnableTodo = true.obs;
+  Rx<bool> isEnableButton = true.obs;
 
   List<String> errorMessages = [];
 
@@ -47,33 +47,25 @@ class TodoController extends GetxController {
 
   TodoController() {
     getUserTodoList();
-    loadPriorityList();
-    loadCategoryList();
-    loadTags();
+    loadInitialData();
   }
 
-  loadPriorityList() async {
-    var collection =
-        await FirebaseFirestore.instance.collection("Priority").get();
-    for (var element in collection.docs) {
+  loadInitialData() async {
+    var priorityCollection = await _todoService.getPriorities();
+    var categoryCollection = await _todoService.getCategories();
+    var tagCollection = await _todoService.getTags();
+
+    for (var element in priorityCollection.docs) {
       priorityList.value.add(PriorityModel().fromJson(element.data()));
       priorityColor.value.add(defaultPriorityColor);
     }
-  }
 
-  loadCategoryList() async {
-    var collection =
-        await FirebaseFirestore.instance.collection("Category").get();
     categoryList.value.add(CategoryModel(key: 0, value: "Seç"));
-    for (var element in collection.docs) {
+    for (var element in categoryCollection.docs) {
       categoryList.value.add(CategoryModel().fromJson(element.data()));
     }
-    // category.value = categoryList.value[0]; if you want as default value
-  }
 
-  loadTags() async {
-    var collection = await FirebaseFirestore.instance.collection("Tags").get();
-    for (var element in collection.docs) {
+    for (var element in tagCollection.docs) {
       var data = element.data();
       tagOptions.value
           .add(S2Choice<int>(value: data["Key"], title: data["Value"]));
@@ -81,6 +73,7 @@ class TodoController extends GetxController {
   }
 
   allClear() {
+    isEnableButton.value = true;
     title.value = "";
     note.value = "";
     priority.value = null;
@@ -136,7 +129,23 @@ class TodoController extends GetxController {
 
   selectTodoItem(index, value) {
     todoList.value[index].isCompleted = value;
+
+    var listItemIndex = selectedItems.value.indexOf(todoList.value[index].key!);
+
+    if (listItemIndex == -1) {
+      selectedItems.value.add(todoList.value[index].key!);
+    } else {
+      selectedItems.value.removeAt(listItemIndex);
+    }
+
+    selectedItems.refresh();
     todoList.refresh();
+  }
+
+  removeTodoItem() async {
+    await _todoService.removeTodo(selectedItems.value);
+    selectedItems.value.clear();
+    selectedItems.refresh();
   }
 
   addAttachmentToTask(List<PlatformFile> files) {
@@ -149,7 +158,7 @@ class TodoController extends GetxController {
   }
 
   Future<String> saveUserTodo() async {
-    isEnableTodo.value = false;
+    isEnableButton.value = false;
     var user =
         CacheManager.getInstance.getCacheItem<UserModel>("UserId", UserModel());
     errorMessages.clear();
@@ -162,7 +171,7 @@ class TodoController extends GetxController {
     if (errorMessages.isEmpty) {
       var todoModel = TodoModel(
           uid: user!.uid,
-          key: getRandomString(15),
+          key: HelperMethods().getRandomString(15),
           title: title.value,
           note: note.value,
           priority: priority.value,
@@ -178,7 +187,7 @@ class TodoController extends GetxController {
       if (pickedFiles.value.isNotEmpty) {
         for (var file in pickedFiles.value!) {
           String fName = basename((file).path);
-          var fileName = "${user.uid}-$fName";
+          var fileName = "${todoModel.key}-$fName";
           attachmentNames.add(fileName);
           await saveUserFilesToStorage(user.uid!, fileName, file);
         }
@@ -190,6 +199,7 @@ class TodoController extends GetxController {
           .set(todoModel.toJson());
 
       addLocalNotification();
+      todoList.refresh();
     }
 
     String response = "";
@@ -197,7 +207,7 @@ class TodoController extends GetxController {
     for (var message in errorMessages) {
       response += message + "\n";
     }
-    isEnableTodo.value = true;
+    isEnableButton.value = true;
     return response;
   }
 
@@ -233,16 +243,6 @@ class TodoController extends GetxController {
           .snapshots();
     }
     return const Stream.empty();
-  }
-
-  String getRandomString(int length) {
-    return String.fromCharCodes(
-      Iterable.generate(
-        length,
-        (_) => StringConstants.chars
-            .codeUnitAt(Random().nextInt(StringConstants.chars.length)),
-      ),
-    );
   }
 
   saveUserFilesToStorage(

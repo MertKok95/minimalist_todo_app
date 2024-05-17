@@ -1,5 +1,4 @@
 import 'package:todo_list_with_getx/model/user_model.dart';
-import 'package:todo_list_with_getx/viewmodel/user_viewmodel.dart';
 
 import '../../../viewmodel/sign_in_viewmodel.dart';
 

@@ -47,6 +47,9 @@ class TodoModel extends IBaseModel<TodoModel> {
       category: json["category"] != null
           ? CategoryModel().fromJson(json["category"])
           : CategoryModel(),
+      attachments: json["attachments"] == null
+          ? []
+          : List<String>.from(json["attachments"]!.map((x) => x)),
       tags: json["tags"] == null
           ? []
           : List<TagModel>.from(

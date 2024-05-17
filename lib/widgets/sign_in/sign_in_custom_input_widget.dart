@@ -31,7 +31,7 @@ class SignInCustomInputWidget extends StatelessWidget {
         alignment: Alignment.center,
         child: TextFormField(
           controller: controller,
-          validator: (value) => (value ?? '').length > 6 ? null : '6 ten kucuk',
+          validator: (value) => (value ?? '').length > 5 ? null : '6 ten kucuk',
           obscureText: obscureText,
           decoration: InputDecoration(
             hintText: hintText,
